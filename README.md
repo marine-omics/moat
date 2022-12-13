@@ -15,7 +15,7 @@ graph TD;
 	prot-->interproscan;
 	signalp-->R;
 	tmhmm-->R;
-	pfam_hmmscan-->R;
+	hmmscan-->R;
 	blastp-->R;
 	blastx-->R;
 	interproscan-->R;
