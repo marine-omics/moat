@@ -5,12 +5,13 @@ Performs functional annotation on mRNA and protein sequences.  This includes pre
 ```mermaid
 graph TD;
 	prot-->signalp;
-	prot-->pfam_hmmscan;
+	prot-->hmmscan;
 	prot-->tmhmm;
 	prot-->blastp;
 	cds-->blastx;
 	swissprot-->blastp;
 	swissprot-->blastx;
+	pfam-->hmmscan;
 	prot-->interproscan;
 	signalp-->R;
 	tmhmm-->R;
