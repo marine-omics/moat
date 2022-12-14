@@ -24,17 +24,24 @@ workflow {
   prot = Channel.fromPath(file(params.prot, checkIfExists:true)) | collect
   cds = Channel.fromPath(file(params.cds, checkIfExists:true)) | collect
   blastdb = Channel.fromPath(file("${params.blastdb}.*")) | collect
-  pfamdb = Channel.fromPath(params.pfamdb, checkIfExists:true)) | collect
 
   
   blastp_result = blastp(prot,blastdb)
   blastx_result = blastx(prot,blastdb)
   signalp_result = signalp(prot)
   tmhmm_result = tmhmm(prot)
-  hmmscan_result = hmmscan(prot,pfamdb)
+
+  if(params.pfamdb){
+    pfamdb = Channel.fromPath(file(params.pfamdb, checkIfExists:true)) | collect
+    hmmscan_result = hmmscan(prot,pfamdb)
+  } else {
+    log.warn("No Pfam database provided. Skipping hmmscan")
+  }
 
   if(!params.skip_interproscan){
     ipr_result = split_fasta(prot,params.split_max) | interproscan
+  } else {
+   log.warn("Skipping interproscan") 
   }
 
 }

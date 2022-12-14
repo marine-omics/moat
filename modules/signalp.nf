@@ -10,7 +10,7 @@ process signalp {
 
 
     script:
-    def prefix=${fasta.baseName}
+    def prefix="${fasta.baseName}"
     """
     signalp -f short -n ${prefix}.signalp.out ${fasta}
     """

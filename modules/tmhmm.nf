@@ -10,7 +10,7 @@ process tmhmm {
 
 
     script:
-    def prefix=${fasta.baseName}
+    def prefix="${fasta.baseName}"
     """
     tmhmm --short < ${fasta} > ${prefix}.tmhmm.out
     """

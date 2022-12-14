@@ -12,7 +12,7 @@ process hmmscan {
 
   script:
   def dbname = "${db[0].baseName}"
-  def prefix = ${query.baseName}
+  def prefix = "${query.baseName}"
   """
   hmmscan --cpu ${task.cpus} --domtblout ${prefix}.pfam.out ${db} ${query} > pfam.log
   """
