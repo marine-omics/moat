@@ -70,6 +70,7 @@ Download Pfam hmm models
 ```bash
 wget 'https://ftp.ebi.ac.uk/pub/databases/Pfam/current_release/Pfam-A.hmm.gz'
 gunzip Pfam-A.hmm.gz 
+hmmpress Pfam-A.hmm
 ```
 
 #### Interproscan
@@ -83,10 +84,7 @@ IPRSCAN=5.59-91.0
 cd /scratch/ipr
 
 wget -O interproscan-data-$IPRSCAN.tar.gz ftp://ftp.ebi.ac.uk/pub/software/unix/iprscan/$IPR/$IPRSCAN/alt/interproscan-data-$IPRSCAN.tar.gz
-
-tar -pxvzf interproscan-data-$IPRSCAN.tar.gz \
-    -C /opt/interproscan --strip-components=1 \
-    && rm -f interproscan-data-$IPRSCAN.tar.gz interproscan-data-$IPRSCAN.tar.gz.md5
+tar -xvzf interproscan-data-$IPRSCAN.tar.gz
 ```
 
 Once unpacked this data directory needs to be mounted into the container at a specific path.  We do this by configuring `runOptions` for singularity / docker as follows;

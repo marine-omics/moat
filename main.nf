@@ -6,6 +6,7 @@ include { split_fasta } from './modules/fasta.nf'
 include { signalp } from './modules/signalp.nf'
 include { tmhmm } from './modules/tmhmm.nf'
 include { hmmscan } from './modules/hmmer.nf'
+include { make_table } from './modules/r_tabulate.nf'
 
 params.blastdb=null
 params.pfamdb=null
@@ -35,21 +36,28 @@ workflow {
   signalp_result = signalp(prot)
   tmhmm_result = tmhmm(prot)
 
+  ch_all_results = blastp_result.mix(blastx_result,signalp_result,tmhmm_result)
+
   if(params.pfamdb){
     pfamdb = Channel.fromPath(file("${params.pfamdb}.*")) | collect
     hmmscan_result = hmmscan(prot,pfamdb)
+    ch_all_results = ch_all_results.mix(hmmscan_result)
   } else {
     log.warn("No Pfam database provided. Skipping hmmscan")
   }
-
 
   if(!params.skip_interproscan){
     ch_sf = split_fasta(prot,params.split_max)
 
     ipr_result = ch_sf | flatten | interproscan | collect | cat_ipr
+    ch_all_results = ch_all_results.mix(ipr_result)
   } else {
    log.warn("Skipping interproscan") 
   }
+
+  all_results = ch_all_results | collect
+
+  make_table(all_results,"${projectDir}/R/tabulate.R")
 
 }
 
