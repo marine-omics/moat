@@ -7,8 +7,6 @@ process interproscan {
 
     output:
         path('*.tsv')           , emit: tsv
-        path('*.gff3')           , emit: gff3
-        path('*.log')            , emit: log
 
     script:
 
@@ -18,3 +16,16 @@ process interproscan {
     """
 }
 
+process cat_ipr {
+
+  input:
+    path(inputs)
+
+  output:
+    path "interproscan.tsv"
+
+  script:
+  """
+  cat ${inputs} > "interproscan.tsv" 
+  """
+}

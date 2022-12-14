@@ -1,7 +1,7 @@
 nextflow.enable.dsl=2
 
 include { blastp;blastx } from './modules/blast.nf'
-include { interproscan } from './modules/interproscan.nf'
+include { interproscan;cat_ipr } from './modules/interproscan.nf'
 include { split_fasta } from './modules/fasta.nf'
 include { signalp } from './modules/signalp.nf'
 include { tmhmm } from './modules/tmhmm.nf'
@@ -39,7 +39,7 @@ workflow {
   }
 
   if(!params.skip_interproscan){
-    ipr_result = split_fasta(prot,params.split_max) | interproscan
+    ipr_result = split_fasta(prot,params.split_max) | interproscan | concat | cat_ipr
   } else {
    log.warn("Skipping interproscan") 
   }
