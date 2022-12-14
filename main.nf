@@ -14,6 +14,7 @@ params.prot=null
 params.cds=null
 params.skip_interproscan=false
 params.split_max=1000
+params.blast_eval=0.00001
 
 if(!params.outdir){
   log.error "No outdir provided. Provide one with --outdir myoutdir"
@@ -23,7 +24,6 @@ if(!params.outdir){
 workflow {
 
   prot = Channel.fromPath(file(params.prot, checkIfExists:true)) | collect
-  cds = Channel.fromPath(file(params.cds, checkIfExists:true)) | collect
 
   if (!params.blastdb){
     log.error("No blast database provided. Provide one via the blastdb parameter")
@@ -32,11 +32,18 @@ workflow {
 
   
   blastp_result = blastp(prot,blastdb)
-  blastx_result = blastx(prot,blastdb)
   signalp_result = signalp(prot)
   tmhmm_result = tmhmm(prot)
 
-  ch_all_results = blastp_result.mix(blastx_result,signalp_result,tmhmm_result)
+  ch_all_results = blastp_result.mix(signalp_result,tmhmm_result)
+
+  if(params.cds ){
+    cds = Channel.fromPath(file(params.cds, checkIfExists:true)) | collect
+    blastx_result = blastx(cds,blastdb)
+    ch_all_results = ch_all_results.mix(blastx_result)
+  } else {
+    log.warn("No cds or prot2cds_map provided. Skipping blastx")    
+  }
 
   if(params.pfamdb){
     pfamdb = Channel.fromPath(file("${params.pfamdb}.*")) | collect
@@ -56,8 +63,9 @@ workflow {
   }
 
   all_results = ch_all_results | collect
+  all_results.view()
 
-  make_table(all_results,"${projectDir}/R/tabulate.R")
+  make_table(all_results,params.blast_eval,"${projectDir}/R/tabulate.R")
 
 }
 

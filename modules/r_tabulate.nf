@@ -6,6 +6,7 @@ process make_table {
 
     input:
         path(result_files)
+        val(blast_eval)
         path 'tabulate.R'
 
     output:
@@ -15,6 +16,6 @@ process make_table {
 
     def args = task.ext.args ?: ''
     """
-    Rscript tabulate.R
+    Rscript tabulate.R . ${blast_eval}
     """
 }
