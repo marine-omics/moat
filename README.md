@@ -2,6 +2,8 @@
 
 Performs functional annotation on mRNA and protein sequences.  This includes predicted transcript (mRNA/CDS) and protein sequences from gene models (eg genome obtained via NCBI or gene models generated in house). It also includes assembled transcripts and corresponding predicted proteins from a denovo transcriptome assembly. 
 
+Note that `moat` primarily performs annotation on proteins.  If provided, nucleotide sequences (transcript sequences) are used only for blastx searches to identify hits that might otherwise be obscured by low quality protein prediction (eg due to a frameshift). No attempt is made to annotate non-coding transcripts. 
+
 ```mermaid
 graph TD;
 	prot-->signalp;
