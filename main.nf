@@ -32,7 +32,7 @@ workflow {
   tmhmm_result = tmhmm(prot)
 
   if(params.pfamdb){
-    pfamdb = Channel.fromPath(file(params.pfamdb, checkIfExists:true)) | collect
+    pfamdb = Channel.fromPath(file("${params.pfamdb}.*")) | collect
     hmmscan_result = hmmscan(prot,pfamdb)
   } else {
     log.warn("No Pfam database provided. Skipping hmmscan")

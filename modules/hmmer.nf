@@ -14,6 +14,6 @@ process hmmscan {
   def dbname = "${db[0].baseName}"
   def prefix = "${query.baseName}"
   """
-  hmmscan --cpu ${task.cpus} --domtblout ${prefix}.pfam.out ${db} ${query} > pfam.log
+  hmmscan --cpu ${task.cpus} --domtblout ${prefix}.pfam.out ${dbname} ${query} > pfam.log
   """
 }
