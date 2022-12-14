@@ -45,13 +45,15 @@ workflow {
     log.warn("No cds or prot2cds_map provided. Skipping blastx")    
   }
 
-  if(params.pfamdb){
-    pfamdb = Channel.fromPath(file("${params.pfamdb}.*")) | collect
-    hmmscan_result = hmmscan(prot,pfamdb)
-    ch_all_results = ch_all_results.mix(hmmscan_result)
-  } else {
-    log.warn("No Pfam database provided. Skipping hmmscan")
-  }
+  // HMMSCAN seems redundant given Interpro does this
+  //
+  // if(params.pfamdb){
+  //   pfamdb = Channel.fromPath(file("${params.pfamdb}.*")) | collect
+  //   hmmscan_result = hmmscan(prot,pfamdb)
+  //   ch_all_results = ch_all_results.mix(hmmscan_result)
+  // } else {
+  //   log.warn("No Pfam database provided. Skipping hmmscan")
+  // }
 
   if(!params.skip_interproscan){
     ch_sf = split_fasta(prot,params.split_max)

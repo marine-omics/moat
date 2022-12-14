@@ -7,21 +7,18 @@ Note that `moat` primarily performs annotation on proteins.  If provided, nucleo
 ```mermaid
 graph TD;
 	prot-->signalp;
-	prot-->hmmscan;
 	prot-->tmhmm;
 	prot-->blastp;
 	cds-->blastx;
 	swissprot-->blastp;
 	swissprot-->blastx;
-	pfam-->hmmscan;
 	prot-->interproscan;
 	signalp-->R;
 	tmhmm-->R;
-	hmmscan-->R;
 	blastp-->R;
 	blastx-->R;
 	interproscan-->R;
-	R-->annotations.tsv
+	R-->annotation.tsv
 ```
 
 ## Installation
@@ -42,13 +39,27 @@ If desired you may also provide a set of transcripts (nucleotide sequences for y
 nextflow run marine-omics/morp -latest -profile zodiac -r main --cds transcripts.fasta --prot protein.fasta
 ```
 
+## Outputs
+
+After running `moat` you should find raw outputs from each of the individual annotation tools (blast, interproscan, hmmscan etc) in the output directory.  There should also be a file, `final_table/annotation.tsv` in which all of these results are joined into a single table.  This table has columns;
+
+- *id*: Your original protein ID
+- *evalue*: E value of the best blast hit
+- *Swissprot_acc*: Swissprot accession of the best blast hit
+- *method*: Which blast method (blastp, blastx) gave the best blast hit
+- *ipr_go*: GO terms assigned by Interproscan based on the presence of conserved domains and protein family membership
+- *Pfam_desc*: Names of `Pfam` domains identified by Interproscan
+- *Pfam_acc*: Accessions of `Pfam` domains identified by Interproscan
+- *SUPERFAMILY_desc*: Name of the superfamily assigned by Interproscan
+- *SUPERFAMILY_acc*: Accession of the superfamily assigned by Interproscan
+- *signal_peptide*: Whether a signal peptide was identified by SignalP
+- *tmhmm_topology*: Transmbrane domain Topology identified by TMHMM. See [here](https://services.healthtech.dtu.dk/service.php?TMHMM-2.0) for an explanation of this format
 
 ##  Databases
 
 On JCU systems `moat` should already be configured with access to the databases it needs. These include;
 
 - The Uniprot Swissprot database of annotated proteins (for `blastp` and `blastx` processes)
-- The Pfam database of protein domains and families (for `hmmer`)
 - A collection of databases required for Interproscan
 
 If these databases are not available on your system you will need to install them as follows;
@@ -66,16 +77,6 @@ This will produce a set of files with names matching `swissprot.*`.  You can tel
 
 ```bash
 params.blastdb="<path/to/folder>/swissprot"
-```
-
-#### PFam
-
-Download Pfam hmm models
-
-```bash
-wget 'https://ftp.ebi.ac.uk/pub/databases/Pfam/current_release/Pfam-A.hmm.gz'
-gunzip Pfam-A.hmm.gz 
-hmmpress Pfam-A.hmm
 ```
 
 #### Interproscan
