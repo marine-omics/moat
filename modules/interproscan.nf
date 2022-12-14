@@ -1,7 +1,5 @@
 process interproscan {
 
-    publishDir "$params.outdir/ipr", mode: 'copy'
-
     input:
         path(prots)
 
@@ -12,11 +10,14 @@ process interproscan {
 
     def args = task.ext.args ?: ''
     """
-    interproscan.sh -i ${prots}  --disable-precalc
+    interproscan.sh -i ${prots}  --disable-precalc -f tsv -goterms -cpu ${task.cpus}
     """
 }
 
 process cat_ipr {
+
+    publishDir "$params.outdir/ipr", mode: 'copy'
+
 
   input:
     path(inputs)
