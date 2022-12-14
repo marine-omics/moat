@@ -55,6 +55,32 @@ After running `moat` you should find raw outputs from each of the individual ann
 - *signal_peptide*: Whether a signal peptide was identified by SignalP
 - *tmhmm_topology*: Transmbrane domain Topology identified by TMHMM. See [here](https://services.healthtech.dtu.dk/service.php?TMHMM-2.0) for an explanation of this format
 
+## Obtaining more annotations
+
+The `Swissprot_acc` field in the `moat` output provides a key for obtaining many more detailed annotations.  These can be looked up from the uniprot website and easily joined to your table.
+
+First extract a list of all swissprot accessions for upload
+
+```bash
+cat annotation.tsv | grep -v 'Swissprot' | awk '{print $3}' | sort -u > swissprot_acc.txt
+```
+
+Upload these accessions to [https://www.uniprot.org/id-mapping](https://www.uniprot.org/id-mapping). 
+
+When your mapping job is complete you will be presented with a list of swissprot entries corresponding to your identifiers.  The default is to show just columns with basic information, however, you can add many more columns of information to the table by clicking "Customize columns".  In particular you will probably want to add a column for *Gene Ontology IDs*. 
+
+Once you have finished adding columns you can download the full table of results. Choose excel format for download.  You can then join this information with your `moat` table like this;
+
+```R
+library(tidyverse)
+
+moat_annotations <- read_tsv("outdir/final_table/annotation.tsv")
+
+swissprot_annotations <- readxl::read_excel("uniprot-download.xlsx")
+
+moat_annotations %>% left_join(swissprot_annotations,by=c("Swissprot_acc"="From"))
+```
+
 ##  Databases
 
 On JCU systems `moat` should already be configured with access to the databases it needs. These include;
