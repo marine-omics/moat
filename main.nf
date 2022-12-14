@@ -42,11 +42,11 @@ workflow {
     log.warn("No Pfam database provided. Skipping hmmscan")
   }
 
-  ch_sf = split_fasta(prot,params.split_max)
-  ch_sf.view()
 
   if(!params.skip_interproscan){
-    ipr_result = ch_sf | interproscan | collect | cat_ipr
+    ch_sf = split_fasta(prot,params.split_max)
+
+    ipr_result = ch_sf | flatten | interproscan | collect | cat_ipr
   } else {
    log.warn("Skipping interproscan") 
   }
