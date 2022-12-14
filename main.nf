@@ -39,7 +39,7 @@ workflow {
   }
 
   if(!params.skip_interproscan){
-    ipr_result = split_fasta(prot,params.split_max) | interproscan | concat | cat_ipr
+    ipr_result = split_fasta(prot,params.split_max) | interproscan | collect | cat_ipr
   } else {
    log.warn("Skipping interproscan") 
   }
