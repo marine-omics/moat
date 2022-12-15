@@ -27,6 +27,8 @@ process cat_ipr {
 
   script:
   """
-  cat ${inputs} > "interproscan.tsv" 
+  echo "id,md5,length,analysis,sig_acc,sig_desc,start,end,score,status, date,ipr_acc,ipr_desc,goterm" | tr "," '\t' > interproscan.tsv
+
+  cat ${inputs} >> "interproscan.tsv" 
   """
 }

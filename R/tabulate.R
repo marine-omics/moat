@@ -48,8 +48,7 @@ full_table <- blast %>%
 iprfile <- list.files(report_dir,"interproscan.tsv",full.names = T)
 if ( length(iprfile) == 1){
 
-	ipr_cols <- c("id","md5","length","analysis","sig_acc","sig_desc","start","end","score","status", "date","ipr_acc","ipr_desc","goterm")
-	iprscan <- read_tsv(iprfile,col_names = ipr_cols,show_col_types = FALSE, na = c("","-"))
+	iprscan <- read_tsv(iprfile,col_names = TRUE,show_col_types = FALSE, na = c("","-"))
 	iprscan_golong <- iprscan %>% 
 	  separate_rows(goterm, sep ="\\|")
 
