@@ -30,13 +30,13 @@ First install and configure [nextflow](https://www.nextflow.io/). See [here](htt
 Assuming your predicted proteins are in `protein.fasta`, run `moat` as follows on the JCU HPC (`zodiac`).
 
 ```bash
-nextflow run marine-omics/morp -latest -profile zodiac -r main --prot protein.fasta
+nextflow run marine-omics/moat -latest -profile zodiac -r main --prot protein.fasta
 ```
 
 If desired you may also provide a set of transcripts (nucleotide sequences for your proteins). These should have identical IDs to your proteins. Assuming they are in a file called `transcripts.fasta` you would run `moat` as follows;
 
 ```bash
-nextflow run marine-omics/morp -latest -profile zodiac -r main --cds transcripts.fasta --prot protein.fasta
+nextflow run marine-omics/moat -latest -profile zodiac -r main --cds transcripts.fasta --prot protein.fasta
 ```
 
 ## Outputs
